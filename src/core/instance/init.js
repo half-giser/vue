@@ -11,8 +11,15 @@ import { initProvide, initInjections } from './inject'
 import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
-
+/**
+* 定义初始化工具
+* @param Vue (constructor function)
+*/
 export function initMixin (Vue: Class<Component>) {
+  /**
+  * 定义构造函数(Vue)的原型对象的(_init)方法
+  * 构造函数（Vue）初始化
+  */
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -33,8 +40,10 @@ export function initMixin (Vue: Class<Component>) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
       // internal component options needs special treatment.
+      // 子组件选项合并
       initInternalComponent(vm, options)
     } else {
+      // 根组件选项合并
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -43,6 +52,9 @@ export function initMixin (Vue: Class<Component>) {
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
+      /**
+      * 大概代码的意思：给实例对象定义_renderProxy属性
+      */
       initProxy(vm)
     } else {
       vm._renderProxy = vm
