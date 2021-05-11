@@ -18,6 +18,12 @@ type PropOptions = {
   validator: ?Function
 };
 
+/**
+* 校验组件 props ??
+* @param {String} key props(key)
+* @param {Object} propOptions 需要校验 props 对象
+* @param {Object} propsData 相应组件上的$options.propsData
+*/
 export function validateProp (
   key: string,
   propOptions: Object,
@@ -196,6 +202,12 @@ function isSameType (a, b) {
   return getType(a) === getType(b)
 }
 
+/**
+* 校验组件中 props 每个键是否符合给定的数据类型
+* @param {Type} type 给定的数据类型
+* @param {Array | String} expectedType 预期的数据类型
+* 返回给定数据类型在期望的数据类型中的序号或者-1
+*/
 function getTypeIndex (type, expectedTypes): number {
   if (!Array.isArray(expectedTypes)) {
     return isSameType(expectedTypes, type) ? 0 : -1
