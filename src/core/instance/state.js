@@ -62,6 +62,11 @@ export function initState (vm: Component) {
   }
 }
 
+/**
+* 处理组件实例上存放的props 对象
+* @param {Object} vm 组件实例
+* @param {Object} propsOptions 组件实例上 $options.props
+*/
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
