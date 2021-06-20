@@ -91,6 +91,7 @@ export default class Watcher {
         )
       }
     }
+    // 针对组件上computed 属性返回 undefined，否者返回执行函数之后的值
     this.value = this.lazy
       ? undefined
       : this.get()

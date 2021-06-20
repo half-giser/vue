@@ -51,6 +51,7 @@ export function initState (vm: Component) {
   const opts = vm.$options
   if (opts.props) initProps(vm, opts.props)
   if (opts.methods) initMethods(vm, opts.methods)
+  //  实现组件VM 上的数据集双向绑定  
   if (opts.data) {
     initData(vm)
   } else {
@@ -78,8 +79,11 @@ function initProps (vm: Component, propsOptions: Object) {
   if (!isRoot) {
     toggleObserving(false)
   }
+  // 遍历组件实例上 props 对象  
   for (const key in propsOptions) {
+    // 优化组件更新时的变更速度
     keys.push(key)
+    // 
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
@@ -117,6 +121,7 @@ function initProps (vm: Component, propsOptions: Object) {
 
 function initData (vm: Component) {
   let data = vm.$options.data
+  // 运行数据函数后，得到在实例vm上绑定的数据集  
   data = vm._data = typeof data === 'function'
     ? getData(data, vm)
     : data || {}
@@ -161,6 +166,7 @@ export function getData (data: Function, vm: Component): any {
   // #7573 disable dep collection when invoking data getters
   pushTarget()
   try {
+    // 运行定义在组件上的data function,并且给data 函数提供组件实例对象vm作为arguments[0];
     return data.call(vm, vm)
   } catch (e) {
     handleError(e, vm, `data()`)
@@ -181,6 +187,7 @@ function initComputed (vm: Component, computed: Object) {
   for (const key in computed) {
     const userDef = computed[key]
     const getter = typeof userDef === 'function' ? userDef : userDef.get
+    // JS 中是否不能判定变量与null 绝对相等(===), ----结论是否，当getter变量为undefine || null 时，表达式getter == null ->true
     if (process.env.NODE_ENV !== 'production' && getter == null) {
       warn(
         `Getter is missing for computed property "${key}".`,
@@ -221,6 +228,7 @@ export function defineComputed (
   userDef: Object | Function
 ) {
   const shouldCache = !isServerRendering()
+  //  在非服务器渲染的情况下，都是在访问computed 属性时才执行对应回调返回执行结果
   if (typeof userDef === 'function') {
     sharedPropertyDefinition.get = shouldCache
       ? createComputedGetter(key)

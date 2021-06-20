@@ -19,10 +19,10 @@ type PropOptions = {
 };
 
 /**
-* 校验组件 props ??
+* 获取目标组件上对应键key--默认值
 * @param {String} key props(key)
 * @param {Object} propOptions 需要校验 props 对象
-* @param {Object} propsData 相应组件上的$options.propsData
+* @param {Object} propsData 目标组件上 $options.propsData 对象
 */
 export function validateProp (
   key: string,
@@ -33,7 +33,7 @@ export function validateProp (
   const prop = propOptions[key]
   const absent = !hasOwn(propsData, key)
   let value = propsData[key]
-  // boolean casting
+  // boolean casting，首先判断是否为 boolean
   const booleanIndex = getTypeIndex(Boolean, prop.type)
   if (booleanIndex > -1) {
     if (absent && !hasOwn(prop, 'default')) {
@@ -47,7 +47,7 @@ export function validateProp (
       }
     }
   }
-  // check default value
+  // check default value， 然后再去判断默认值
   if (value === undefined) {
     value = getPropDefaultValue(vm, prop, key)
     // since the default value is a fresh copy,

@@ -45,9 +45,12 @@ export class Observer {
     this.vmCount = 0
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
+       // 判断当前环境是否支持__proto__ 属性，以此来区分对观察对象进行原型继承时采用的方式；
       if (hasProto) {
+        //  将观察者对象的__proto__ 属性设置成 内置数组原型对象(arrayMethods)
         protoAugment(value, arrayMethods)
       } else {
+        //  遍历 内置数组原型对象(arrayMethods)的属性来使观察者对象继承所有属性
         copyAugment(value, arrayMethods, arrayKeys)
       }
       this.observeArray(value)
@@ -153,7 +156,9 @@ export function defineReactive (
     val = obj[key]
   }
 
+  // 为特定属性构造Observer 对象   
   let childOb = !shallow && observe(val)
+  // 为特定属性构造响应式赋值
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -187,6 +192,7 @@ export function defineReactive (
       } else {
         val = newVal
       }
+     //   数据值被更新时需要重新对新值设定观察对象，并且将这个变化通知相关组件
       childOb = !shallow && observe(newVal)
       dep.notify()
     }
