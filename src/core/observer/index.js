@@ -156,9 +156,9 @@ export function defineReactive (
     val = obj[key]
   }
 
-  // 为特定属性构造Observer 对象   
+  // 仅仅在深度观察时，才为对象的嵌套属性构造Observer 对象
   let childOb = !shallow && observe(val)
-  // 为特定属性构造响应式赋值
+  // 为目标对象构造数据响应式
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -192,7 +192,7 @@ export function defineReactive (
       } else {
         val = newVal
       }
-     //   数据值被更新时需要重新对新值设定观察对象，并且将这个变化通知相关组件
+     //  仅仅在深度观察时，数据值被更新时需要重新对新值设定Observer 对象，并且将这个变化通知相关组件
       childOb = !shallow && observe(newVal)
       dep.notify()
     }
