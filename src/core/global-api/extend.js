@@ -15,12 +15,14 @@ export function initExtend (Vue: GlobalAPI) {
 
   /**
    * Class inheritance
+   * Create an new Vue Constructor, inherit from Vue constructor;
    */
   Vue.extend = function (extendOptions: Object): Function {
     extendOptions = extendOptions || {}
     const Super = this
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
+    // 如果已经继承过一次的构造函数，再次进行继承时直接返回缓存过的构造函数    
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
     }
@@ -29,10 +31,11 @@ export function initExtend (Vue: GlobalAPI) {
     if (process.env.NODE_ENV !== 'production' && name) {
       validateComponentName(name)
     }
-
+    // 新构造函数Sub，实质上也是使用Vue.prototype._init(options)方法来实例化组件
     const Sub = function VueComponent (options) {
       this._init(options)
     }
+    // 新构造函数Sub.prototype 继承 Vue.prototype, 并且重新赋值其构造函数为Sub(function);
     Sub.prototype = Object.create(Super.prototype)
     Sub.prototype.constructor = Sub
     Sub.cid = cid++
